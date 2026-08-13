@@ -4,9 +4,29 @@ import {
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
 // import { use } from "react";
-import { registerUserService } from "../../auth/components/service/auth.service";
+import {
+  loadUserService,
+  registerUserService,
+} from "../../auth/components/service/auth.service";
 import { loginUserService } from "../../auth/components/service/auth.service";
-// import { Dashboard } from "../../dashboard/component/Dashboard";
+
+export const loadUser = createAsyncThunk(
+  "auth/loadUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await loadUserService();
+      return response;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message ||
+          error.response?.data.errors?.[0]?.msg ||
+          error.message ||
+          "loading user failed",
+      );
+    }
+  },
+);
+
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
 

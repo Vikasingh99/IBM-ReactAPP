@@ -33,3 +33,13 @@ export const loginUserService = async (formData) => {
     throw { data: error.response.data, status: error.response.status };
   }
 };
+
+export const loadUserService = async () => {
+  try {
+    const res = await API.get("/auth");
+    return { data: res.data, status: res.status };
+  } catch (error) {
+    console.log(error);
+    throw { data: error.response.data, status: error.response.status };
+  }
+};

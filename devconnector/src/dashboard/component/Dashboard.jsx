@@ -1,15 +1,26 @@
-import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../auth/redux/auth.selector";
+import { loadUser, loginUser, registerUser } from "../../auth/redux/auth.thunk";
+import { Signup } from "../../auth/components/Signup";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginUserService,
+  registerUserService,
+} from "../../auth/components/service/auth.service";
 
 export const Dashboard = () => {
+  const dispatch = useDispatch();
   const user = useSelector(selectCurrentUser);
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
   return (
     <>
-      {" "}
       <section className="container">
         <h1 className="large text-primary">Dashboard</h1>
         <p className="lead">
-          <i className="fas fa-user"></i> Welcome {user?.name}
+          <i className="fas fa-user"></i> Welcome {user?.name || "User"}
         </p>
         <div className="dash-buttons">
           <a href="create-profile.html" className="btn btn-light">

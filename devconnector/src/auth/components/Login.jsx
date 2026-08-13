@@ -20,36 +20,18 @@ export const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  // const onSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     await dispatch(loginUser(formData)).unwrap();
-
-  //     navigate("/dashboard");
-  //   } catch (error) {
-  //     console.log("Login failed:", error);
-  //   }
-  // };
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("1. Form submitted:", formData);
-
     try {
-      console.log("2. Dispatching registerUser...");
-
-      const result = await dispatch(registerUser(formData)).unwrap();
-
-      console.log("3. Registration successful:", result);
+      await dispatch(loginUser(formData)).unwrap();
 
       navigate("/dashboard");
-
-      console.log("4. Navigation called");
     } catch (error) {
-      console.log("5. Signup failed:", error);
+      console.log("Login failed:", error);
     }
   };
+
   return (
     <>
       {" "}
