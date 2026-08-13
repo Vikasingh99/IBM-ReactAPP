@@ -3,16 +3,18 @@ import {
   isRejected,
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
-import { use } from "react";
+// import { use } from "react";
 import { registerUserService } from "../../auth/components/service/auth.service";
 import { loginUserService } from "../../auth/components/service/auth.service";
-
+// import { Dashboard } from "../../dashboard/component/Dashboard";
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
 
   async (userData, { rejectWithValue }) => {
     try {
       const response = await registerUserService(userData);
+      localStorage.setItem("token", response.data.token);
+      // navigate("/dashboard");
       return response;
     } catch (error) {
       return rejectWithValue(
@@ -35,6 +37,8 @@ export const loginUser = createAsyncThunk(
   async (userData, { rejectWithValue }) => {
     try {
       const response = await loginUserService(userData);
+      localStorage.setItem("token", response.data.token);
+      // navigate("/dashboard");
       return response;
     } catch (error) {
       return rejectWithValue(

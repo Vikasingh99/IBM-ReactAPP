@@ -35,10 +35,16 @@ export const Signup = () => {
 
   // Used to handle form submission,
   // usually to process the form data.
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    dispatch(registerUser(formData));
+
+    try {
+      await dispatch(registerUser(formData)).unwrap();
+      navigate("/dashboard");
+    } catch (error) {
+      console.log("Signup failed:", error);
+    }
   };
 
   return (

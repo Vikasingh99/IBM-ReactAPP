@@ -1,12 +1,15 @@
-import React from "react";
+import { useSelector } from "react-redux";
+import { selectCurrentUser } from "../../auth/redux/auth.selector";
+
 export const Dashboard = () => {
+  const user = useSelector(selectCurrentUser);
   return (
     <>
       {" "}
       <section className="container">
         <h1 className="large text-primary">Dashboard</h1>
         <p className="lead">
-          <i className="fas fa-user"></i> Welcome John Doe
+          <i className="fas fa-user"></i> Welcome {user?.name}
         </p>
         <div className="dash-buttons">
           <a href="create-profile.html" className="btn btn-light">

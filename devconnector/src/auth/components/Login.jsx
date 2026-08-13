@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Footer from "../../core/components/layout/Footer";
 import { Link, useNavigate } from "react-router";
 import { loginUser } from "../redux/auth.thunk";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const loginState = {
   email: "",
@@ -20,15 +20,34 @@ export const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
+  // const onSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     await dispatch(loginUser(formData)).unwrap();
+
+  //     navigate("/dashboard");
+  //   } catch (error) {
+  //     console.log("Login failed:", error);
+  //   }
+  // };
   const onSubmit = async (e) => {
     e.preventDefault();
 
+    console.log("1. Form submitted:", formData);
+
     try {
-      await dispatch(loginUser(formData)).unwrap();
+      console.log("2. Dispatching registerUser...");
+
+      const result = await dispatch(registerUser(formData)).unwrap();
+
+      console.log("3. Registration successful:", result);
 
       navigate("/dashboard");
+
+      console.log("4. Navigation called");
     } catch (error) {
-      console.log("Login failed:", error);
+      console.log("5. Signup failed:", error);
     }
   };
   return (
