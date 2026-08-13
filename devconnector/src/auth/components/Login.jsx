@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import Footer from "../../core/components/layout/Footer";
 import { Link, useNavigate } from "react-router";
-import { loginUser } from "./service/auth.service";
+import { loginUser } from "../redux/auth.thunk";
+import { useDispatch, useSelector } from "react-redux";
 
 const loginState = {
   email: "",
@@ -10,6 +11,8 @@ const loginState = {
 
 export const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState(loginState);
   const { email, password } = formData;
 
@@ -17,17 +20,16 @@ export const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    loginUser(formData)
-      .then((res) => {
-        console.log(res);
-        navigate("/dashboard");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+
+    try {
+      await dispatch(loginUser(formData)).unwrap();
+
+      navigate("/dashboard");
+    } catch (error) {
+      console.log("Login failed:", error);
+    }
   };
   return (
     <>

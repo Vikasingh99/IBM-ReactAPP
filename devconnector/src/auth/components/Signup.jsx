@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import Footer from "../../core/components/layout/Footer";
 import { Link, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../redux/auth.thunk";
 
 const signupState = {
   name: "",
@@ -11,6 +13,11 @@ const signupState = {
 
 export const Signup = () => {
   const navigate = useNavigate();
+  // useDispatch,
+  const dispatch = useDispatch();
+
+  //useSelector
+  // const auth = useSelector((state) => state.auth);
 
   // useState: this hook is used to manage the state of the component. It returns an array with two elements.
   // element: the current state value and a function to update that state.
@@ -31,6 +38,7 @@ export const Signup = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
+    dispatch(registerUser(formData));
   };
 
   return (

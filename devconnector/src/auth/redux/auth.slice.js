@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import authState from "./auth.state";
 import { act } from "react";
-import { registerUser } from "./auth.thunk";
+import { registerUser, loginUser } from "./auth.thunk";
 
 const authSlice = createSlice({
   name: "auth",
@@ -22,6 +22,29 @@ const authSlice = createSlice({
     builder.addCase(registerUser.rejected, (state, action) => {
       state.status = "failed";
       state.loading = false;
+      state.error = action.payload;
+    });
+
+    // LOGIN
+    builder.addCase(loginUser.pending, (state) => {
+      state.status = "loading";
+      state.loading = true;
+      state.error = null;
+    });
+
+    builder.addCase(loginUser.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.loading = false;
+      state.isAuthenticated = true;
+      state.user = action.payload.data.user;
+      state.token = action.payload.data.token;
+      state.error = null;
+    });
+
+    builder.addCase(loginUser.rejected, (state, action) => {
+      state.status = "failed";
+      state.loading = false;
+      state.isAuthenticated = false;
       state.error = action.payload;
     });
   },

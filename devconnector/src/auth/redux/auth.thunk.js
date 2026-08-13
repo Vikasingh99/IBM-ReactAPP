@@ -4,16 +4,18 @@ import {
   isRejectedWithValue,
 } from "@reduxjs/toolkit";
 import { use } from "react";
+import { registerUserService } from "../../auth/components/service/auth.service";
+import { loginUserService } from "../../auth/components/service/auth.service";
 
 export const registerUser = createAsyncThunk(
   "auth/registerUser",
 
-  async (userData, { rejectedWithValue }) => {
+  async (userData, { rejectWithValue }) => {
     try {
       const response = await registerUserService(userData);
       return response;
     } catch (error) {
-      return rejectedWithValue(
+      return rejectWithValue(
         error.response?.data?.message ||
           error.response?.data?.errors?.[0]?.msg ||
           error.message ||
@@ -27,3 +29,20 @@ export const registerUser = createAsyncThunk(
 //createAsyncThunk: its a function which is used to create an async action.
 // auth/registerUser: we passed this value as a name to identify action with this name.
 // rejectedWithValue: if we want to reject the value we can use this function. ==> failure part.
+
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (userData, { rejectWithValue }) => {
+    try {
+      const response = await loginUserService(userData);
+      return response;
+    } catch (error) {
+      return rejectWithValue(
+        error.data?.message ||
+          error.data?.errors?.[0]?.msg ||
+          error.message ||
+          "Login failed",
+      );
+    }
+  },
+);

@@ -24,7 +24,7 @@ export const registerUserService = async (formData) => {
 
 // export const loginUser
 
-export const loginUser = async (formData) => {
+export const loginUserService = async (formData) => {
   try {
     const res = await API.post("/auth", formData); // endpoint for logging in the user in the backend
     return { data: res.data, status: res.status };
