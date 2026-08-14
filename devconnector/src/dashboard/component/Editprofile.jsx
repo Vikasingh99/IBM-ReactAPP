@@ -50,7 +50,6 @@ const Editprofile = () => {
           instagram: profile.social?.instagram || "",
         });
       } catch (err) {
-        // No profile yet is okay.
         console.log("No existing profile");
       } finally {
         setLoading(false);
@@ -69,7 +68,6 @@ const Editprofile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
 
     try {
@@ -87,8 +85,6 @@ const Editprofile = () => {
 
         githubusername: formData.githubusername,
 
-        // IMPORTANT:
-        // Your backend currently expects these at the top level.
         twitter: formData.twitter,
         facebook: formData.facebook,
         linkedin: formData.linkedin,
@@ -96,7 +92,7 @@ const Editprofile = () => {
         instagram: formData.instagram,
       };
 
-      console.log("Sending profile:", profileData);
+      console.log("PROFILE DATA BEFORE API:", profileData);
 
       await createOrUpdateProfileService(profileData);
 

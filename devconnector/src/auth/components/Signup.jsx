@@ -22,7 +22,8 @@ export const Signup = () => {
   // useState: this hook is used to manage the state of the component. It returns an array with two elements.
   // element: the current state value and a function to update that state.
   const [formData, setFormData] = useState(signupState);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
   //destructuring the form data object to get the individual values of name, email, password and password2.
   const { name, email, password, password2 } = formData;
 
@@ -86,27 +87,49 @@ export const Signup = () => {
           </div>
 
           <div className="form-group">
-            <input
-              type="password"
-              placeholder="Password"
-              name="password"
-              value={password}
-              onChange={onChange}
-              minLength={8}
-              required
-            />
+            <div className="form-group">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                name="password"
+                value={password}
+                onChange={onChange}
+                minLength={8}
+                required
+              />
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={() => setShowPassword(!showPassword)}
+                />
+                Show password
+              </label>
+            </div>
           </div>
 
           <div className="form-group">
-            <input
-              type="password"
-              placeholder="Confirm Password"
-              name="password2"
-              value={password2}
-              onChange={onChange}
-              minLength={8}
-              required
-            />
+            <div className="form-group">
+              <input
+                type={showPassword2 ? "text" : "password"}
+                placeholder="Confirm Password"
+                name="password2"
+                value={password2}
+                onChange={onChange}
+                minLength={8}
+                required
+              />
+
+              <label>
+                <input
+                  type="checkbox"
+                  checked={showPassword2}
+                  onChange={() => setShowPassword2(!showPassword2)}
+                />
+                Show password
+              </label>
+            </div>
           </div>
 
           <input type="submit" className="btn btn-primary" value="Register" />

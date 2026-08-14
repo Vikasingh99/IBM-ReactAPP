@@ -13,6 +13,16 @@ import {
   deleteAccountService,
 } from "../service/profile.service";
 
+const formatDate = (date) => {
+  if (!date) return "";
+
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
 export const Dashboard = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +41,11 @@ export const Dashboard = () => {
 
         setProfile(profileData);
       } catch (error) {
-        console.log("Unable to load profile", error);
+        console.log(
+          "Unable to load profile:",
+          error.response?.data?.msg || error.message,
+        );
+        setProfile(null);
       } finally {
         setLoading(false);
       }
@@ -86,14 +100,23 @@ export const Dashboard = () => {
     if (!confirmed) return;
 
     try {
-      await deleteAccountService();
+      const response = await deleteAccountService();
+
+      console.log("DELETE ACCOUNT RESPONSE:", response);
 
       await dispatch(logoutUser());
 
       navigate("/auth/login");
     } catch (error) {
-      console.log(error);
-      alert("Unable to delete account");
+      console.error("DELETE ACCOUNT ERROR:", error);
+      console.error("STATUS:", error.response?.status);
+      console.error("DATA:", error.response?.data);
+
+      alert(
+        error.response?.data?.msg ||
+          error.response?.data?.message ||
+          "Unable to delete account",
+      );
     }
   };
 
@@ -114,6 +137,64 @@ export const Dashboard = () => {
       <p className="lead">
         <i className="fas fa-user"></i> Welcome {user?.name || "User"}
       </p>
+      {profile?.social && (
+        <div className="social">
+          {profile.social.twitter && (
+            <a
+              href={profile.social.twitter}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Twitter"
+            >
+              <i className="fab fa-twitter"></i>
+            </a>
+          )}
+
+          {profile.social.facebook && (
+            <a
+              href={profile.social.facebook}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Facebook"
+            >
+              <i className="fab fa-facebook"></i>
+            </a>
+          )}
+
+          {profile.social.linkedin && (
+            <a
+              href={profile.social.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="LinkedIn"
+            >
+              <i className="fab fa-linkedin"></i>
+            </a>
+          )}
+
+          {profile.social.youtube && (
+            <a
+              href={profile.social.youtube}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="YouTube"
+            >
+              <i className="fab fa-youtube"></i>
+            </a>
+          )}
+
+          {profile.social.instagram && (
+            <a
+              href={profile.social.instagram}
+              target="_blank"
+              rel="noreferrer"
+              aria-label="Instagram"
+            >
+              <i className="fab fa-instagram"></i>
+            </a>
+          )}
+        </div>
+      )}
 
       <div className="dash-buttons">
         <Link to="/dashboard/create-profile" className="btn btn-light">
@@ -150,8 +231,8 @@ export const Dashboard = () => {
                 <td className="hide-sm">{experience.title}</td>
 
                 <td className="hide-sm">
-                  {experience.from} -{" "}
-                  {experience.current ? "Now" : experience.to}
+                  {formatDate(experience.from)} -{" "}
+                  {experience.current ? "Now" : formatDate(experience.to)}
                 </td>
 
                 <td>
@@ -193,7 +274,8 @@ export const Dashboard = () => {
                 <td className="hide-sm">{education.degree}</td>
 
                 <td className="hide-sm">
-                  {education.from} - {education.current ? "Now" : education.to}
+                  {formatDate(education.from)} -{" "}
+                  {education.current ? "Now" : formatDate(education.to)}
                 </td>
 
                 <td>

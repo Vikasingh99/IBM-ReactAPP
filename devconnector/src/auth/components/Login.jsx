@@ -14,6 +14,7 @@ export const Login = () => {
   const dispatch = useDispatch();
 
   const [formData, setFormData] = useState(loginState);
+  const [showPassword, setShowPassword] = useState(false);
   const { email, password } = formData;
 
   const onChange = (e) => {
@@ -56,13 +57,22 @@ export const Login = () => {
 
           <div className="form-group">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Password"
               name="password"
               value={password}
               onChange={onChange}
               required
             />
+
+            <label>
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={() => setShowPassword(!showPassword)}
+              />
+              Show password
+            </label>
           </div>
 
           <input type="submit" className="btn btn-primary" value="Login" />
