@@ -1,4 +1,4 @@
-// import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 
@@ -24,37 +24,7 @@ const Editprofile = () => {
     instagram: "",
   });
 
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
-  // useEffect(() => {
-  //   const loadProfile = async () => {
-  //     try {
-  //       const profile = await getProfileService();
-
-  //       setFormData({
-  //         company: profile.company || "",
-  //         website: profile.website || "",
-  //         location: profile.location || "",
-  //         bio: profile.bio || "",
-  //         skills: profile.skills ? profile.skills.join(", ") : "",
-  //         githubusername: profile.githubusername || "",
-  //         twitter: profile.social?.twitter || "",
-  //         facebook: profile.social?.facebook || "",
-  //         linkedin: profile.social?.linkedin || "",
-  //         youtube: profile.social?.youtube || "",
-  //         instagram: profile.social?.instagram || "",
-  //       });
-  //     } catch (err) {
-  //       // No profile yet is okay.
-  //       console.log("No existing profile");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   loadProfile();
-  // }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -100,23 +70,15 @@ const Editprofile = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      console.log("Profile error:", err);
+      console.error("Profile error:", err);
 
       setError(
         err.response?.data?.message ||
-          err.data?.message ||
+          err.response?.data?.msg ||
           "Unable to save profile",
       );
     }
   };
-
-  if (loading) {
-    return (
-      <section className="container">
-        <p>Loading profile...</p>
-      </section>
-    );
-  }
 
   return (
     <section className="container">
@@ -125,7 +87,11 @@ const Editprofile = () => {
       <p className="lead">
         <i className="fas fa-user"></i> Let's get some information
       </p>
+
+      {error && <div className="alert alert-danger">{error}</div>}
+
       <form onSubmit={handleSubmit}>
+        {/* Professional Status */}
         <select
           name="status"
           value={formData.status}
@@ -143,6 +109,7 @@ const Editprofile = () => {
           <option value="Other">Other</option>
         </select>
 
+        {/* Company */}
         <input
           type="text"
           name="company"
@@ -151,6 +118,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Website */}
         <input
           type="text"
           name="website"
@@ -159,30 +127,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        <button type="submit" className="btn btn-primary">
-          Save Profile
-        </button>
-      </form>
-
-      {error && <div className="alert alert-danger">{error}</div>}
-
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="company"
-          placeholder="Company"
-          value={formData.company}
-          onChange={handleChange}
-        />
-
-        <input
-          type="text"
-          name="website"
-          placeholder="Website"
-          value={formData.website}
-          onChange={handleChange}
-        />
-
+        {/* Location */}
         <input
           type="text"
           name="location"
@@ -191,6 +136,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Bio */}
         <textarea
           name="bio"
           placeholder="A short bio of yourself"
@@ -198,6 +144,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Skills */}
         <input
           type="text"
           name="skills"
@@ -206,6 +153,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Github */}
         <input
           type="text"
           name="githubusername"
@@ -214,6 +162,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Social Links */}
         <input
           type="text"
           name="twitter"
@@ -254,6 +203,7 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
+        {/* Buttons */}
         <button type="submit" className="btn btn-primary">
           Save Profile
         </button>
