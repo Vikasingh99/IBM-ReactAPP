@@ -125,6 +125,44 @@ const Editprofile = () => {
       <p className="lead">
         <i className="fas fa-user"></i> Let's get some information
       </p>
+      <form onSubmit={handleSubmit}>
+        <select
+          name="status"
+          value={formData.status}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Professional Status</option>
+          <option value="Developer">Developer</option>
+          <option value="Junior Developer">Junior Developer</option>
+          <option value="Senior Developer">Senior Developer</option>
+          <option value="Manager">Manager</option>
+          <option value="Student or Learning">Student or Learning</option>
+          <option value="Instructor or Teacher">Instructor or Teacher</option>
+          <option value="Intern">Intern</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <input
+          type="text"
+          name="company"
+          placeholder="Company"
+          value={formData.company}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="website"
+          placeholder="Website"
+          value={formData.website}
+          onChange={handleChange}
+        />
+
+        <button type="submit" className="btn btn-primary">
+          Save Profile
+        </button>
+      </form>
 
       {error && <div className="alert alert-danger">{error}</div>}
 
