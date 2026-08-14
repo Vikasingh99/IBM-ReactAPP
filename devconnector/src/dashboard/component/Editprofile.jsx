@@ -1,5 +1,16 @@
-const CreateProfile = () => {
+// import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+
+import { loadUser } from "../../auth/redux/auth.thunk";
+import { createOrUpdateProfileService } from "../service/profile.service";
+
+const Editprofile = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const [formData, setFormData] = useState({
+    status: "",
     company: "",
     website: "",
     location: "",
@@ -13,6 +24,38 @@ const CreateProfile = () => {
     instagram: "",
   });
 
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // useEffect(() => {
+  //   const loadProfile = async () => {
+  //     try {
+  //       const profile = await getProfileService();
+
+  //       setFormData({
+  //         company: profile.company || "",
+  //         website: profile.website || "",
+  //         location: profile.location || "",
+  //         bio: profile.bio || "",
+  //         skills: profile.skills ? profile.skills.join(", ") : "",
+  //         githubusername: profile.githubusername || "",
+  //         twitter: profile.social?.twitter || "",
+  //         facebook: profile.social?.facebook || "",
+  //         linkedin: profile.social?.linkedin || "",
+  //         youtube: profile.social?.youtube || "",
+  //         instagram: profile.social?.instagram || "",
+  //       });
+  //     } catch (err) {
+  //       // No profile yet is okay.
+  //       console.log("No existing profile");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   loadProfile();
+  // }, []);
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -20,13 +63,60 @@ const CreateProfile = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(formData);
+    setError("");
 
-    // dispatch/create profile API call here
+    try {
+      const profileData = {
+        status: formData.status,
+        company: formData.company,
+        website: formData.website,
+        location: formData.location,
+        bio: formData.bio,
+
+        skills: formData.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean),
+
+        githubusername: formData.githubusername,
+
+        social: {
+          twitter: formData.twitter,
+          facebook: formData.facebook,
+          linkedin: formData.linkedin,
+          youtube: formData.youtube,
+          instagram: formData.instagram,
+        },
+      };
+
+      console.log("Sending profile:", profileData);
+
+      await createOrUpdateProfileService(profileData);
+
+      await dispatch(loadUser());
+
+      navigate("/dashboard");
+    } catch (err) {
+      console.log("Profile error:", err);
+
+      setError(
+        err.response?.data?.message ||
+          err.data?.message ||
+          "Unable to save profile",
+      );
+    }
   };
+
+  if (loading) {
+    return (
+      <section className="container">
+        <p>Loading profile...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="container">
@@ -35,6 +125,8 @@ const CreateProfile = () => {
       <p className="lead">
         <i className="fas fa-user"></i> Let's get some information
       </p>
+
+      {error && <div className="alert alert-danger">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <input
@@ -71,15 +163,73 @@ const CreateProfile = () => {
         <input
           type="text"
           name="skills"
-          placeholder="Skills"
+          placeholder="Skills (comma separated)"
           value={formData.skills}
           onChange={handleChange}
         />
 
+        <input
+          type="text"
+          name="githubusername"
+          placeholder="Github Username"
+          value={formData.githubusername}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="twitter"
+          placeholder="Twitter URL"
+          value={formData.twitter}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="facebook"
+          placeholder="Facebook URL"
+          value={formData.facebook}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="linkedin"
+          placeholder="LinkedIn URL"
+          value={formData.linkedin}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="youtube"
+          placeholder="YouTube URL"
+          value={formData.youtube}
+          onChange={handleChange}
+        />
+
+        <input
+          type="text"
+          name="instagram"
+          placeholder="Instagram URL"
+          value={formData.instagram}
+          onChange={handleChange}
+        />
+
         <button type="submit" className="btn btn-primary">
-          Submit
+          Save Profile
+        </button>
+
+        <button
+          type="button"
+          className="btn btn-light"
+          onClick={() => navigate("/dashboard")}
+        >
+          Go Back
         </button>
       </form>
     </section>
   );
 };
+
+export default Editprofile;

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import authState from "./auth.state";
 import { act } from "react";
-import { registerUser, loginUser, loadUser } from "./auth.thunk";
+import { registerUser, loginUser, loadUser, logoutUser } from "./auth.thunk";
 
 const authSlice = createSlice({
   name: "auth",
@@ -90,6 +90,14 @@ const authSlice = createSlice({
       state.loading = false;
       state.isAuthenticated = false;
       state.error = action.payload;
+    });
+    builder.addCase(logoutUser.fulfilled, (state) => {
+      state.isAuthenticated = false;
+      state.user = null;
+      state.token = null;
+      state.loading = false;
+      state.status = "";
+      state.error = null;
     });
   },
 });
