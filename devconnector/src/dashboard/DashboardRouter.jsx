@@ -6,6 +6,9 @@ export const DashboardRouter = () => {
     <>
       <Routes>
         <Route path="/" element={<Dashboard />} />
+        <Route path="/create-profile" element={<CreateProfile />} />
+        <Route path="/add-experience" element={<AddExperience />} />
+        <Route path="/add-education" element={<AddEducation />} />
       </Routes>
     </>
   );
