@@ -11,7 +11,7 @@ export const createOrUpdateProfileService = async (profileData) => {
 };
 
 export const addExperienceService = async (experienceData) => {
-  const response = await API.post("/profile/experience", experienceData);
+  const response = await API.put("/profile/experience", experienceData);
 
   return response.data;
 };
@@ -23,7 +23,7 @@ export const deleteExperienceService = async (id) => {
 };
 
 export const addEducationService = async (educationData) => {
-  const response = await API.post("/profile/education", educationData);
+  const response = await API.put("/profile/education", educationData);
 
   return response.data;
 };

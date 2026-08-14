@@ -1,9 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 
 import { loadUser } from "../../auth/redux/auth.thunk";
-import { createOrUpdateProfileService } from "../service/profile.service";
+import {
+  getProfileService,
+  createOrUpdateProfileService,
+} from "../service/profile.service";
 
 const Editprofile = () => {
   const navigate = useNavigate();
@@ -24,7 +27,38 @@ const Editprofile = () => {
     instagram: "",
   });
 
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const profile = await getProfileService();
+
+        setFormData({
+          status: profile.status || "",
+          company: profile.company || "",
+          website: profile.website || "",
+          location: profile.location || "",
+          bio: profile.bio || "",
+          skills: profile.skills?.join(", ") || "",
+          githubusername: profile.githubusername || "",
+          twitter: profile.social?.twitter || "",
+          facebook: profile.social?.facebook || "",
+          linkedin: profile.social?.linkedin || "",
+          youtube: profile.social?.youtube || "",
+          instagram: profile.social?.instagram || "",
+        });
+      } catch (err) {
+        // No profile yet is okay.
+        console.log("No existing profile");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -53,13 +87,13 @@ const Editprofile = () => {
 
         githubusername: formData.githubusername,
 
-        social: {
-          twitter: formData.twitter,
-          facebook: formData.facebook,
-          linkedin: formData.linkedin,
-          youtube: formData.youtube,
-          instagram: formData.instagram,
-        },
+        // IMPORTANT:
+        // Your backend currently expects these at the top level.
+        twitter: formData.twitter,
+        facebook: formData.facebook,
+        linkedin: formData.linkedin,
+        youtube: formData.youtube,
+        instagram: formData.instagram,
       };
 
       console.log("Sending profile:", profileData);
@@ -73,12 +107,21 @@ const Editprofile = () => {
       console.error("Profile error:", err);
 
       setError(
-        err.response?.data?.message ||
+        err.response?.data?.errors?.[0]?.msg ||
           err.response?.data?.msg ||
+          err.response?.data?.message ||
           "Unable to save profile",
       );
     }
   };
+
+  if (loading) {
+    return (
+      <section className="container">
+        <p>Loading profile...</p>
+      </section>
+    );
+  }
 
   return (
     <section className="container">
@@ -91,7 +134,6 @@ const Editprofile = () => {
       {error && <div className="alert alert-danger">{error}</div>}
 
       <form onSubmit={handleSubmit}>
-        {/* Professional Status */}
         <select
           name="status"
           value={formData.status}
@@ -109,7 +151,6 @@ const Editprofile = () => {
           <option value="Other">Other</option>
         </select>
 
-        {/* Company */}
         <input
           type="text"
           name="company"
@@ -118,7 +159,6 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Website */}
         <input
           type="text"
           name="website"
@@ -127,7 +167,6 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Location */}
         <input
           type="text"
           name="location"
@@ -136,7 +175,6 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Bio */}
         <textarea
           name="bio"
           placeholder="A short bio of yourself"
@@ -144,16 +182,15 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Skills */}
         <input
           type="text"
           name="skills"
           placeholder="Skills (comma separated)"
           value={formData.skills}
           onChange={handleChange}
+          required
         />
 
-        {/* Github */}
         <input
           type="text"
           name="githubusername"
@@ -162,7 +199,6 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Social Links */}
         <input
           type="text"
           name="twitter"
@@ -203,7 +239,6 @@ const Editprofile = () => {
           onChange={handleChange}
         />
 
-        {/* Buttons */}
         <button type="submit" className="btn btn-primary">
           Save Profile
         </button>

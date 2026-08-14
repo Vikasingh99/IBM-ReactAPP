@@ -42,7 +42,12 @@ const AddExperience = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to add experience");
+      setError(
+        err.response?.data?.errors?.[0]?.msg ||
+          err.response?.data?.msg ||
+          err.response?.data?.message ||
+          "Unable to add education",
+      );
     }
   };
 

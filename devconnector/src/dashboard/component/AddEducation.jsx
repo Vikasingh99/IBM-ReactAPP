@@ -42,7 +42,12 @@ const AddEducation = () => {
 
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Unable to add education");
+      setError(
+        err.response?.data?.errors?.[0]?.msg ||
+          err.response?.data?.msg ||
+          err.response?.data?.message ||
+          "Unable to add education",
+      );
     }
   };
 
@@ -82,6 +87,7 @@ const AddEducation = () => {
           placeholder="Field Of Study"
           value={formData.fieldofstudy}
           onChange={handleChange}
+          required
         />
 
         <label>From Date</label>
